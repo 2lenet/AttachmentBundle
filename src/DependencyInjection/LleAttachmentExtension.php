@@ -22,7 +22,11 @@ class LleAttachmentExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setParameter( 'lle.attachment.directory', $config[ 'directory' ] );
+        $container->setParameter( 'lle.attachment.show_list', $config[ 'show_list' ] );
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yaml');
+        $loader->load('actions.yaml');
     }
 }

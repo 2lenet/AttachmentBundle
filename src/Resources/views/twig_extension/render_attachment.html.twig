@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="{{ asset('bundles/lleattachment/css/dropzone.css') }}">
+<style>
+    .dropzone .dz-preview .dz-image img{
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<script src="{{ asset('bundles/lleattachment/js/dropzone.js') }}"></script>
+<div class="dropzone upload-dropzone" id="file_upload-{{unique_id}}" action="{{path('lle_attachment_upload',{'id': item.id, 'class': class})}}"></div>
+
+<script>
+    //je récupère l'action où sera traité l'upload en PHP
+    var _actionToDropZone = $("#file_upload-{{unique_id}}").attr('action');
+
+    //je définis ma zone de drop grâce à l'ID de ma div citée plus haut.
+    Dropzone.autoDiscover = false;
+    var myDropzone = new Dropzone("#file_upload-{{unique_id}}", { url: _actionToDropZone, addRemoveLinks: true, dictRemoveFile: 'Supprimer' });
+    myDropzone.on('removedfile', function(event){
+        console.log(event);
+        $.ajax(event.removeUrl, {'method':'POST'});
+        $('#attach-file-' + event.id).hide();
+        $('.dz-message').hide();
+    });
+    {% for f in docs %}
+    var mockFile = {
+        name: '{{ f.filename }}',
+        size: {{ f.size }},
+        removeUrl: '{{ path('lle_attachment_delete',{id:f.id}) }}',
+        id: {{ f.id }}};
+    myDropzone.options.addedfile.call(myDropzone, mockFile);
+    myDropzone.options.complete.call(myDropzone, mockFile);
+    myDropzone.options.thumbnail.call(myDropzone, mockFile, "{{ path('lle_attachment_thumb',{id:f.id}) }}");
+    {% endfor %}
+
+</script>

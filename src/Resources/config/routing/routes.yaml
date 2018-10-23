@@ -1,0 +1,20 @@
+lle_attachment_show:
+    path: /show
+    controller: lle.attachment.action.show
+
+lle_attachment_delete:
+    path: /{id}/delete
+    controller: lle.attachment.action.delete
+    methods: [POST]
+
+lle_attachment_upload:
+    path: /upload
+    controller: lle.attachment.action.upload
+
+lle_attachment_download:
+    path: /{id}/download
+    controller: lle.attachment.action.download
+
+lle_attachment_thumb:
+    path: /{id}/thumb
+    controller: lle.attachment.action.thumb

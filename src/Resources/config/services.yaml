@@ -1,0 +1,15 @@
+services:
+
+    _defaults:
+        autowire: true
+        public: false
+
+    Lle\AttachmentBundle\Service\AttachmentManager:
+        arguments: ["@doctrine.orm.default_entity_manager", "@kernel", "@parameter_bag"]
+
+    lle.attachment.manager: '@Lle\AttachmentBundle\Service\AttachmentManager'
+
+    lle.attachment.twig.extension:
+        class: Lle\AttachmentBundle\Twig\AttachmentTwigExtension
+        arguments: ["@lle.attachment.manager"]
+        tags: [twig.extension]

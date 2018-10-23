@@ -1,0 +1,31 @@
+services:
+
+    _defaults:
+        autowire: true
+        public: true
+
+    lle.attachment.action.show:
+        class: Lle\AttachmentBundle\Action\ShowAction
+        tags: [controller.service_arguments]
+        arguments: ["@lle.attachment.manager","@twig"]
+    lle.attachment: '@lle.attachment.action.show'
+
+    lle.attachment.action.upload:
+        class: Lle\AttachmentBundle\Action\UploadAction
+        tags: [controller.service_arguments]
+        arguments: ["@lle.attachment.manager"]
+
+    lle.attachment.action.download:
+        class: Lle\AttachmentBundle\Action\DownloadAction
+        tags: [controller.service_arguments]
+        arguments: ["@lle.attachment.manager"]
+
+    lle.attachment.action.thumb:
+        class: Lle\AttachmentBundle\Action\ThumbAction
+        tags: [controller.service_arguments]
+        arguments: ["@lle.attachment.manager"]
+
+    lle.attachment.action.delete:
+        class: Lle\AttachmentBundle\Action\DeleteAction
+        tags: [controller.service_arguments]
+        arguments: ["@lle.attachment.manager"]
