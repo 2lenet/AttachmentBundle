@@ -1,0 +1,20 @@
+{
+    "name": "2lenet/attachment-bundle",
+    "type": "symfony-bundle",
+    "description": "Attachment",
+    "keywords": ["attachment"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Saenger joris",
+            "email": "joris@2le.net"
+        }
+    ],
+    "require": {
+        "php": ">=7.2"
+    },
+    "autoload": {
+        "psr-4": { "Lle\\AttachmentBundle\\": "src/" }
+    },
+    "minimum-stability": "dev"
+}
