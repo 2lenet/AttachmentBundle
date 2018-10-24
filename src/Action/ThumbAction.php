@@ -21,7 +21,7 @@ final class ThumbAction{
 
     public function __invoke(Request $request): Response{
         $file = $this->manager->find((int)$request->get('id'));
-        if(strstr($file->getMimetype(), 'image')) {
+        if($this->manager->isImage($file)) {
             $response = new BinaryFileResponse($file->getPath());
             $mimeTypeGuesser = new FileinfoMimeTypeGuesser();
             $response->headers->set('Content-Type', ($mimeTypeGuesser->isSupported()) ? $mimeTypeGuesser->guess($file->getPath()) : 'text/plain');

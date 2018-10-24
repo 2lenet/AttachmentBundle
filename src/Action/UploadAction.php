@@ -21,8 +21,16 @@ final class UploadAction{
     }
 
     public function __invoke(Request $request): Response{
-        $success = $this->manager->addFile($request->files->get('file'), $request->get('class'), $request->get('id'));
-        return new JsonResponse(['success' => $success]);
+        $attachment = $this->manager->addFile($request->files->get('file'), $request->get('class'), $request->get('id'));
+        if($attachment){
+            return new JsonResponse([
+                'success' => true,
+                'id' => $attachment->getId(),
+                'thumb'=> ($this->manager->isImage($attachment))? null:$this->manager->getPublicIconByMimeType($attachment->getMimetype())
+            ]);
+        }else{
+            return new JsonResponse(['success' => false]);
+        }
     }
 
 }

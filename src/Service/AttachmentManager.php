@@ -42,7 +42,7 @@ class AttachmentManager{
         unlink($file->getPath());
     }
 
-    public function addFile(UploadedFile $media, $class, $id): bool{
+    public function addFile(UploadedFile $media, $class, $id): ?Attachment{
         if ($media->isValid()) {
             $file = new Attachment();
             $file->setObjectId($id);
@@ -63,9 +63,9 @@ class AttachmentManager{
 
             $this->em->persist($file);
             $this->em->flush();
-            return true;
+            return $file;
         }
-        return false;
+        return null;
     }
 
     public function getRepository(){
@@ -87,6 +87,14 @@ class AttachmentManager{
 
     public function getIconByMimeType($mimetype){
         return __DIR__.'/../Resources/public/image/cloud.png';
+    }
+
+    public function getPublicIconByMimeType($mimetype){
+        return '/bundles/lleattachment/image/cloud.png';
+    }
+
+    public function isImage(Attachment $attachment):bool{
+        return (bool)strstr($attachment->getMimetype(), 'image');
     }
 
 

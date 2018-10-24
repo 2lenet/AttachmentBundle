@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="fr" trgLang="fr">
+  <file id="messages.fr">
+    <unit id="94qpMaI" name="lleattachment.action.remove">
+      <segment>
+        <source>lleattachment.action.remove</source>
+        <target>Supprimer</target>
+      </segment>
+    </unit>
+    <unit id="94qpMaH" name="lleattachment.label.upload">
+      <segment>
+        <source>lleattachment.label.upload</source>
+        <target>Déposez vos documents ici ou cliquez</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>
