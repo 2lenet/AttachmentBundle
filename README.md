@@ -39,6 +39,10 @@ You can use several attachment on the same template
 with default value
 
 ```yaml
+framework:
+    translator:
+        fallbacks: ['fr']
+
 lle_attachment:
     directory: data/attachment #directory of files is registred
     show_list: false #show or not show the list of files
