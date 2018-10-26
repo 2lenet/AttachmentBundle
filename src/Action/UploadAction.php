@@ -26,7 +26,7 @@ final class UploadAction{
             return new JsonResponse([
                 'success' => true,
                 'id' => $attachment->getId(),
-                'thumb'=> ($this->manager->isImage($attachment))? null:$this->manager->getPublicIconByMimeType($attachment->getMimetype())
+                'thumb'=> ($this->manager->isImage($attachment))? null:$this->manager->getPublicIcon($attachment)
             ]);
         }else{
             return new JsonResponse(['success' => false]);

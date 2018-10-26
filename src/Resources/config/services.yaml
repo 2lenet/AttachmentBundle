@@ -5,7 +5,7 @@ services:
         public: false
 
     Lle\AttachmentBundle\Service\AttachmentManager:
-        arguments: ["@doctrine.orm.default_entity_manager", "@kernel", "@parameter_bag"]
+        arguments: ["@doctrine.orm.default_entity_manager", "@kernel", "@parameter_bag", "@router"]
 
     lle.attachment.manager: '@Lle\AttachmentBundle\Service\AttachmentManager'
 

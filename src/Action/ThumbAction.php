@@ -27,9 +27,21 @@ final class ThumbAction{
             $response->headers->set('Content-Type', ($mimeTypeGuesser->isSupported()) ? $mimeTypeGuesser->guess($file->getPath()) : 'text/plain');
             $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $file->getFilename());
         }else{
-            $response = new BinaryFileResponse($this->manager->getIconByMimeType($file->getMimetype()));
+            if($this->manager->getIconByMimeType($file->getMimetype())){
+                $response = new BinaryFileResponse($this->manager->getIconByMimeType($file->getMimetype()));
+            }else{
+                $tempFile = tempnam(sys_get_temp_dir(), 'tmp');
+                $image = imagecreate(100,100);
+                $noir = imagecolorallocate($image, 0, 0, 0);
+                $blue = imagecolorallocate($image, 58, 153, 220);
+                $blanc = imagecolorallocate($image, 255, 255, 255);
+                imagefill($image, 0, 0, $blue);
+                $ext = strtoupper(substr(basename($file->getMimetype()),0,3)).'/'. strtoupper(substr($file->getType(),0,3));
+                imagestring($image, 5, 23, 45, $ext, $blanc);
+                imagepng($image, $tempFile);
+                return new BinaryFileResponse($tempFile);
+            }
         }
-
         return $response;
     }
 

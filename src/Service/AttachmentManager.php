@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Routing\Router;
 
 
 class AttachmentManager{
@@ -16,11 +17,13 @@ class AttachmentManager{
     private $em;
     private $kernel;
     private $parameters;
+    private $router;
 
-    public function __construct(EntityManagerInterface $em,  Kernel $kernel, ParameterBagInterface $parameters){
+    public function __construct(EntityManagerInterface $em,  Kernel $kernel, ParameterBagInterface $parameters, Router $router){
         $this->em = $em;
         $this->kernel = $kernel;
         $this->parameters = $parameters;
+        $this->router = $router;
     }
 
 
@@ -50,6 +53,7 @@ class AttachmentManager{
             $file->setFilename($media->getClientOriginalName());
             $file->setSize($media->getSize());
             $file->setMimeType($media->getMimetype());
+            $file->setType($media->getClientOriginalExtension());
 
             $uploadDir = $this->getUploadDir($file);
 
@@ -86,11 +90,14 @@ class AttachmentManager{
     }
 
     public function getIconByMimeType($mimetype){
-        return __DIR__.'/../Resources/public/image/cloud.png';
+        if(strstr($mimetype,'cloud')) {
+            return __DIR__ . '/../Resources/public/image/cloud.png';
+        }
+        return null;
     }
 
-    public function getPublicIconByMimeType($mimetype){
-        return '/bundles/lleattachment/image/cloud.png';
+    public function getPublicIcon(Attachment $attachment){
+        return $this->router->generate('lle_attachment_thumb',['id' => $attachment->getId()]);
     }
 
     public function isImage(Attachment $attachment):bool{
