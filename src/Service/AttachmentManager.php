@@ -100,6 +100,10 @@ class AttachmentManager{
         return $this->router->generate('lle_attachment_thumb',['id' => $attachment->getId()]);
     }
 
+    public function generateRemoveUrl(Attachment $attachment){
+        return $this->router->generate('lle_attachment_delete', ['id' => $attachment->getId()]);
+    }
+
     public function isImage(Attachment $attachment):bool{
         return (bool)strstr($attachment->getMimetype(), 'image');
     }

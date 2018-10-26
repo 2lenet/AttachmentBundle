@@ -21,8 +21,9 @@
         $('.dz-message').hide();
     });
     myDropzone.on("complete", function(file) {
-        let data = JSON.parse(file.xhr.response)
-        file.id = data.id
+        let data = JSON.parse(file.xhr.response);
+        file.id = data.id;
+        file.removeUrl = data.removeUrl;
         if(data.thumb) {
             myDropzone.options.thumbnail.call(myDropzone, file, data.thumb);
         }
