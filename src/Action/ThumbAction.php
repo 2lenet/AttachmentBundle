@@ -32,14 +32,17 @@ final class ThumbAction{
             }else{
                 $tempFile = tempnam(sys_get_temp_dir(), 'tmp');
                 $image = imagecreate(100,100);
-                $noir = imagecolorallocate($image, 0, 0, 0);
                 $blue = imagecolorallocate($image, 58, 153, 220);
                 $blanc = imagecolorallocate($image, 255, 255, 255);
                 imagefill($image, 0, 0, $blue);
-                $ext = strtoupper(substr(basename($file->getMimetype()),0,3)).'/'. strtoupper(substr($file->getType(),0,3));
+                $ext = strtoupper(substr(basename($file->getMimetype()),0,3));
+                if($file->getType() && strtoupper($file->getType()) != 'OTHER') {
+                    $ext .= '/' . strtoupper(substr($file->getType(), 0, 3));
+                }
                 imagestring($image, 5, 23, 45, $ext, $blanc);
                 imagepng($image, $tempFile);
-                return new BinaryFileResponse($tempFile);
+                $response = new BinaryFileResponse($tempFile);
+                $response->deleteFileAfterSend();
             }
         }
         return $response;
