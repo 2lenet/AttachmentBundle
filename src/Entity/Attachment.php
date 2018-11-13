@@ -8,7 +8,12 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * Attachment
  *
- * @ORM\Table(name="lle_attachment", indexes={@ORM\Index(name="attachment_type_idx", columns={"type"})})
+ * @ORM\Table(name="lle_attachment", indexes={
+ *     @ORM\Index(name="attachment_type_idx", columns={"type"}),
+ *     @ORM\Index(name="attachment_objclass_idx", columns={"object_id","object_class"}),
+ *     @ORM\Index(name="attachment_objid_idx", columns={"object_id"}),
+ *     @ORM\Index(name="attachment_class_idx", columns={"object_class"})
+ * })
  * @ORM\Entity
  */
 class Attachment
