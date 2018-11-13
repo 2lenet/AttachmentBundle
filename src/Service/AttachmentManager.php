@@ -29,8 +29,8 @@ class AttachmentManager{
 
     protected function getUploadDir(Attachment  $attachment = null): string
     {
-        $path = $this->kernel->getRootDir().'/../'.$this->parameters->get('lle.attachment.directory').'/';
-        if(!$attachment) return $path;
+        $path = $this->parameters->get('lle.attachment.directory').'/';
+        if (!$attachment) return $path;
         return $path . str_replace('\\','-',$attachment->getObjectClass()) . '/'.$attachment->getObjectId().'/';
     }
 
@@ -42,7 +42,7 @@ class AttachmentManager{
         $file = $this->find($id);
         $this->em->remove($file);
         $this->em->flush();
-        unlink($file->getPath());
+        unlink($this->kernel->getRootDir().'/../'.$file->getPath());
     }
 
     public function addFile(UploadedFile $media, $class, $id): ?Attachment{
@@ -55,7 +55,7 @@ class AttachmentManager{
             $file->setMimeType($media->getMimetype());
             $file->setType($media->getClientOriginalExtension());
 
-            $uploadDir = $this->getUploadDir($file);
+            $uploadDir = $this->kernel->getRootDir().'/../'.$this->getUploadDir($file);
 
             if (!file_exists($uploadDir)) {
                 mkdir($uploadDir, 0775, true);
@@ -63,7 +63,7 @@ class AttachmentManager{
             $name = md5($file->getFilename().$id.microtime()).'.'.$media->getClientOriginalExtension();
             $media->move($uploadDir, $name);
 
-            $file->setPath($uploadDir.$name);
+            $file->setPath($this->getUploadDir($file).$name);
 
             $this->em->persist($file);
             $this->em->flush();
@@ -72,7 +72,11 @@ class AttachmentManager{
         return null;
     }
 
-    public function getRepository(){
+    public function getAbsolutePath($file) {
+        return $this->kernel->getRootDir() . '/../' . $file->getPath();
+    }
+
+    public function getRepository() {
         return $this->em->getRepository(Attachment::class);
     }
 
