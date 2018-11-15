@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Lle\AttachmentBundle\Service;
 
+use Doctrine\ORM\EntityRepository;
 use Lle\AttachmentBundle\Entity\Attachment;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -18,6 +19,7 @@ class AttachmentManager{
     private $kernel;
     private $parameters;
     private $router;
+    private $attachements;
 
     public function __construct(EntityManagerInterface $em,  Kernel $kernel, ParameterBagInterface $parameters, Router $router){
         $this->em = $em;
@@ -32,6 +34,21 @@ class AttachmentManager{
         $path = $this->parameters->get('lle.attachment.directory').'/';
         if (!$attachment) return $path;
         return $path . str_replace('\\','-',$attachment->getObjectClass()) . '/'.$attachment->getObjectId().'/';
+    }
+
+    public function load(string $class, array $ids): void{
+        $this->attachements[$class] = [];
+        $qb  = $this->getRepository()->createQueryBuilder('a')
+            ->where('a.objectId IN (:ids)')
+            ->andWhere('a.objectClass = :class')
+            ->setParameters(['ids'=>$ids, 'class'=> $class]);
+        foreach($qb->getQuery()->execute() as $file){
+            /* @var \Lle\AttachmentBundle\Entity\Attachment $file */
+            if(!isset($this->attachements[$class][$file->getObjectId()])){
+                $this->attachements[$class][$file->getObjectId()] = [];
+            }
+            $this->attachements[$class][$file->getObjectId()][] = $file;
+        }
     }
 
     public function hasList(){
@@ -76,17 +93,21 @@ class AttachmentManager{
         return $this->kernel->getRootDir() . '/../' . $file->getPath();
     }
 
-    public function getRepository() {
+    public function getRepository(): EntityRepository {
         return $this->em->getRepository(Attachment::class);
     }
 
     public function find(int $id): ?Attachment{
         return $this->getRepository()->find($id);
     }
-
+    
     public function findAll(object $entity): iterable{
-
-        return $this->getRepository()->findBy(['objectClass' => get_class($entity), 'objectId' => $this->getIdentifierValue($entity)]);
+        $class = $this->getClass($entity);
+        $identifier = $this->getIdentifierValue($entity);
+        if(isset($this->attachements[$class]) && isset($this->attachements[$class][$identifier])){
+            return $this->attachements[$class][$identifier];
+        }
+        return $this->getRepository()->findBy(['objectClass' => $class, 'objectId' => $identifier]);
     }
 
     public function getUniqueId(object $entity): string{
@@ -115,8 +136,12 @@ class AttachmentManager{
 
     private function getIdentifierValue(object $entity){
         $meta = $this->em->getClassMetadata(get_class($entity));
-        $identifier = $meta->getSingleIdentifierFieldName();
         return $meta->getIdentifierValues($entity)[$meta->getSingleIdentifierFieldName()];
+    }
+
+    private function getClass(object $entity){
+        $meta = $this->em->getClassMetadata(get_class($entity));
+        return $meta->getReflectionClass()->getName();
     }
 
 
