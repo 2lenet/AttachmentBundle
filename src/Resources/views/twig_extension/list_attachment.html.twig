@@ -1,0 +1,7 @@
+<ul style="margin: 0px; list-style-type: none;">
+    {% for f in docs %}
+        <li>
+            <a target="_blank" href="{{ path('lle_attachment_download',{id:f.id}) }}"><i class="fa fa-file-o"></i> {{ f.filename }} </a>
+        </li>
+    {% endfor %}
+</ul>
