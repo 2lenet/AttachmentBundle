@@ -22,9 +22,10 @@ final class ThumbAction{
     public function __invoke(Request $request): Response{
         $file = $this->manager->find((int)$request->get('id'));
         if($this->manager->isImage($file)) {
-            $response = new BinaryFileResponse($file->getPath());
+            $path = $this->manager->getAbsolutePath($file);
+            $response = new BinaryFileResponse($path);
             $mimeTypeGuesser = new FileinfoMimeTypeGuesser();
-            $response->headers->set('Content-Type', ($mimeTypeGuesser->isSupported()) ? $mimeTypeGuesser->guess($file->getPath()) : 'text/plain');
+            $response->headers->set('Content-Type', ($mimeTypeGuesser->isSupported()) ? $mimeTypeGuesser->guess($path) : 'text/plain');
             $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $file->getFilename());
         }else{
             if($this->manager->getIconByMimeType($file->getMimetype())){
