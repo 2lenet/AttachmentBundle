@@ -7,6 +7,7 @@ use Lle\AttachmentBundle\Entity\Attachment;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel;
@@ -63,6 +64,7 @@ class AttachmentManager{
     }
 
     public function addFile(UploadedFile $media, $class, $id): ?Attachment{
+
         if ($media->isValid()) {
             $file = new Attachment();
             $file->setObjectId($id);
@@ -72,21 +74,40 @@ class AttachmentManager{
             $file->setMimeType($media->getMimetype());
             $file->setType($media->getClientOriginalExtension());
 
-            $uploadDir = $this->kernel->getRootDir().'/../'.$this->getUploadDir($file);
-
-            if (!file_exists($uploadDir)) {
-                mkdir($uploadDir, 0775, true);
-            }
-            $name = md5($file->getFilename().$id.microtime()).'.'.$media->getClientOriginalExtension();
-            $media->move($uploadDir, $name);
-
-            $file->setPath($this->getUploadDir($file).$name);
-
-            $this->em->persist($file);
-            $this->em->flush();
-            return $file;
+            return $this->moveAndSave($file, $media, $id);
         }
         return null;
+    }
+
+    public function addFileObject(File $media, $class, $id): ?Attachment{
+
+        $file = new Attachment();
+        $file->setObjectId($id);
+        $file->setObjectClass($class);
+        $file->setFilename($media->getFilename());
+        $file->setSize($media->getSize());
+        $file->setMimeType($media->getMimetype());
+        $file->setType($media->guessExtension());
+
+        return $this->moveAndSave($file, $media, $id);
+    }
+
+    private function moveAndSave(Attachment $file, $media, $id) {
+
+        $uploadDir = $this->kernel->getRootDir().'/../'.$this->getUploadDir($file);
+
+        if (!file_exists($uploadDir)) {
+            mkdir($uploadDir, 0775, true);
+        }
+        $name = md5($file->getFilename().$id.microtime()).'.'.$file->getType();
+        $media->move($uploadDir, $name);
+
+        $file->setPath($this->getUploadDir($file).$name);
+
+        $this->em->persist($file);
+        $this->em->flush();
+        
+        return $file;
     }
 
     public function getAbsolutePath($file) {
