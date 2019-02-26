@@ -14,7 +14,7 @@
     var _actionToDropZone = $("#file_upload-{{unique_id}}").attr('action');
 
     Dropzone.autoDiscover = false;
-    var myDropzone = new Dropzone("#file_upload-{{unique_id}}", { url: _actionToDropZone, addRemoveLinks: true, dictRemoveFile: '{{ 'lleattachment.action.remove'|trans }}' });
+    var myDropzone = new Dropzone("#file_upload-{{unique_id}}", {timeout:0, url: _actionToDropZone, addRemoveLinks: true, dictRemoveFile: '{{ 'lleattachment.action.remove'|trans }}' });
     myDropzone.on('removedfile', function(event){
         $.ajax(event.removeUrl, {'method':'POST'});
         $('#attach-file-' + event.id).hide();
