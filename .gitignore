@@ -1,0 +1,38 @@
+###> symfony/framework-bundle ###
+.env
+/public/bundles/
+/var/
+/vendor/
+/public/test.html
+/translations/messages.fr.xlf
+###< symfony/framework-bundle ###
+
+###> symfony/webpack-encore-pack ###
+/node_modules/
+/public/build/
+/data/attachment/*
+/data/conventions/*
+!data/conventions/.gitkeep
+###< symfony/webpack-encore-pack ###
+
+yarn-error.log
+###> symfony/phpunit-bridge ###
+.phpunit
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+### phpstorm files ###
+.idea
+### phpstorm files ###
+/nbproject/
+
+###> symfony/web-server-bundle ###
+/.web-server-pid
+###< symfony/web-server-bundle ###
+
+/config/packages/php_translation.yaml
+/translations/messages.fr.xlf
+/public/uploads/*
+/data/pdfmodel/*
+!/data/pdfmodel/.gitkeep
+!/public/uploads/.gitkeep
+
