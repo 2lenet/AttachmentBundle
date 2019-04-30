@@ -10,6 +10,12 @@
                             <td>
                                 <a target="_blank" href="{{ path('lle_attachment_download',{id:f.id}) }}"><i class="fa fa-2x fa-file-o"></i> {{ f.filename }} </a>
                             </td>
+                            <td style="vertical-align: middle;">
+                                <div>
+                                    <span>{{ 'history.action.create'|trans({}, 'EasyAdminPlusBundle') }} {{ f.createdBy }}</span>
+                                    <br><span>{{ 'blame.created_at'|trans({}, 'EasyAdminPlusBundle') }} {{ f.createdAt|date('d/m/Y') }}</span>
+                                </div>
+                            </td>
                             <td>
                                 <nav class="nav nav-list">
                                     <a class="btn btn-info"  target="_blank" href="{{ path('lle_attachment_download',{id:f.id}) }}"><i class="fa fa-download"></i></a>
