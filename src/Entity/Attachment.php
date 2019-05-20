@@ -3,6 +3,8 @@
 namespace Lle\AttachmentBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Blameable\Traits\BlameableEntity;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -18,6 +20,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class Attachment
 {
+	use BlameableEntity;
+	use TimestampableEntity;
+
     /**
      * @var int
      *
