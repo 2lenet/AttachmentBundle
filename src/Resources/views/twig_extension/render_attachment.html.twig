@@ -6,7 +6,7 @@
     }
 </style>
 <script src="{{ asset('bundles/lleattachment/js/dropzone.js') }}"></script>
-<form class="dropzone upload-dropzone" id="file_upload-{{unique_id}}" action="{{path('lle_attachment_upload',{'id': item.id, 'class': class})}}">
+<form class="dropzone upload-dropzone" id="file_upload-{{unique_id}}" action="{{path('lle_attachment_upload',{'id': item.id, 'class': class,'field': field})}}">
     <div class="dz-default dz-message"><span>{{ 'lleattachment.label.upload'|trans }}</span></div>
 </form>
 

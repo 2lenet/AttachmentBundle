@@ -18,12 +18,17 @@ final class ShowAction{
         $this->twig = $twig;
     }
 
-    public function __invoke(Request $request, $item): Response{
+    public function __invoke(Request $request, $item, $options): Response{
+        $field = null;
+        if (array_key_exists ( 'field' , $options )) {
+            $field = $options['field'];
+        }
         return new Response($this->twig->render('@LleAttachment/show.html.twig',
             [
-                'docs' => $this->manager->findAll($item),
+                'docs' => $this->manager->findAll($item, $field),
                 'list' => $this->manager->hasList(),
-                'entity' => $item
+                'entity' => $item,
+                'field' => $field
             ]
         ));
     }

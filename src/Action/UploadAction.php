@@ -21,7 +21,7 @@ final class UploadAction{
     }
 
     public function __invoke(Request $request): Response{
-        $attachment = $this->manager->addFile($request->files->get('file'), $request->get('class'), $request->get('id'));
+        $attachment = $this->manager->addFile($request->files->get('file'), $request->get('class'), $request->get('id'), $request->get('field'));
         if($attachment){
             return new JsonResponse([
                 'success' => true,

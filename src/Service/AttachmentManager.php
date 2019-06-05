@@ -63,12 +63,13 @@ class AttachmentManager{
         unlink($this->kernel->getRootDir().'/../'.$file->getPath());
     }
 
-    public function addFile(UploadedFile $media, $class, $id): ?Attachment{
+    public function addFile(UploadedFile $media, $class, $id, $field): ?Attachment{
 
         if ($media->isValid()) {
             $file = new Attachment();
             $file->setObjectId($id);
             $file->setObjectClass($class);
+            $file->setObjectField($field);
             $file->setFilename($media->getClientOriginalName());
             $file->setSize($media->getSize());
             $file->setMimeType($media->getMimetype());
@@ -79,11 +80,12 @@ class AttachmentManager{
         return null;
     }
 
-    public function addFileObject(File $media, $class, $id): ?Attachment{
+    public function addFileObject(File $media, $class, $id, $field=null): ?Attachment{
 
         $file = new Attachment();
         $file->setObjectId($id);
         $file->setObjectClass($class);
+        $file->setObjectField($field);
         $file->setFilename($media->getFilename());
         $file->setSize($media->getSize());
         $file->setMimeType($media->getMimetype());
@@ -122,17 +124,17 @@ class AttachmentManager{
         return $this->getRepository()->find($id);
     }
     
-    public function findAll(object $entity): iterable{
+    public function findAll(object $entity, $field=null): iterable{
         $class = $this->getClass($entity);
-        $identifier = $this->getIdentifierValue($entity);
+        $identifier = $this->getIdentifierValue($entity, $field);
         if(isset($this->attachements[$class]) && isset($this->attachements[$class][$identifier])){
             return $this->attachements[$class][$identifier];
         }
-        return $this->getRepository()->findBy(['objectClass' => $class, 'objectId' => $identifier]);
+        return $this->getRepository()->findBy(['objectClass' => $class, 'objectId' => $identifier, 'objectField'=> $field]);
     }
 
-    public function getUniqueId(object $entity): string{
-        return str_replace('\\','-',get_class($entity)).$this->getIdentifierValue($entity);
+    public function getUniqueId(object $entity, $field): string{
+        return str_replace('\\','-',get_class($entity)).$this->getIdentifierValue($entity).'-'.$field;
     }
 
     public function getIconByMimeType($mimetype){

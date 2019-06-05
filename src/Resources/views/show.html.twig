@@ -30,11 +30,11 @@
                 </table>
             </div>
             <div class="box-footer">
-                {{ render_attachment(entity) }}
+                {{ render_attachment(entity, field) }}
             </div>
         </div>
     </div>
 </div>
 {%  else %}
-    {{ render_attachment(entity) }}
+    {{ render_attachment(entity, field) }}
 {%  endif %}

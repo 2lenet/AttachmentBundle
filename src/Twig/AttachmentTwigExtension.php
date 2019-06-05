@@ -24,20 +24,21 @@ class AttachmentTwigExtension extends \Twig_Extension
         );
     }
 
-    public function renderAttachment(\Twig_Environment $env, object $item)
+    public function renderAttachment(\Twig_Environment $env, object $item, $field=null)
     {
         return $env->render('@LleAttachment/twig_extension/render_attachment.html.twig',[
-            'docs' => $this->manager->findAll($item),
+            'docs' => $this->manager->findAll($item, $field),
             'item' => $item,
+            'field' => $field,
             'class' => get_class($item),
-            'unique_id' => $this->manager->getUniqueId($item)
+            'unique_id' => $this->manager->getUniqueId($item, $field)
         ]);
     }
 
-    public function listAttachment(\Twig_Environment $env, object $item)
+    public function listAttachment(\Twig_Environment $env, object $item, $field=null)
     {
         return $env->render('@LleAttachment/twig_extension/list_attachment.html.twig',[
-            'docs' => $this->manager->findAll($item)
+            'docs' => $this->manager->findAll($item, $field)
         ]);
     }
 

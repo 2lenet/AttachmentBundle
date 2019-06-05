@@ -1,5 +1,17 @@
 # AttachmentBundle
 
+## Installation
+
+`composer req 2lenet/attachment-bundle`
+
+Add to your config/routes.yaml ( no flex reciepe for the moment ).
+
+```yaml
+lle_attachment:
+    resource: "@LleAttachmentBundle/Resources/config/routing/routes.yaml"
+```
+
+
 ## Embed controller in a template
 
 ```twig

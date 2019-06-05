@@ -100,6 +100,14 @@ class Attachment
      */
     private $objectClass;
 
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="object_field", type="string", length=255, nullable=true)
+     */
+    private $objectField;
+
+
     public function upload(UploadedFile $media, $root, $id)
     {
 
@@ -260,7 +268,24 @@ class Attachment
     {
         return $this->objectClass;
     }
+    /**
+     * @return string|null
+     */
+    public function getObjectField(): ?string
+    {
+        return $this->objectField;
+    }
 
+    /**
+     * @param string|null $objectField
+     * @return Attachment
+     */
+    public function setObjectField(?string $objectField): Attachment
+    {
+        $this->objectField = $objectField;
+        return $this;
+    }
+    
     /**
      * Get the value of filename
      */
