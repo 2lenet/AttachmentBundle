@@ -20,7 +20,8 @@ class AttachmentTwigExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFunction('render_attachment', array($this, 'renderAttachment'), array('is_safe' => array('html'), 'needs_environment' => true)),
-            new \Twig_SimpleFunction('list_attachment', array($this, 'listAttachment'), array('is_safe' => array('html'), 'needs_environment' => true))
+            new \Twig_SimpleFunction('list_attachment', array($this, 'listAttachment'), array('is_safe' => array('html'), 'needs_environment' => true)),
+            new \Twig_SimpleFunction('get_attachments', array($this, 'getAttachments'), array('is_safe' => array('html'), 'needs_environment' => true))
         );
     }
 
@@ -34,7 +35,10 @@ class AttachmentTwigExtension extends \Twig_Extension
             'unique_id' => $this->manager->getUniqueId($item, $field)
         ]);
     }
-
+    public function getAttachments(\Twig_Environment $env, object $item, $field=null)
+    {
+        return $this->manager->findAll($item, $field);
+    }
     public function listAttachment(\Twig_Environment $env, object $item, $field=null)
     {
         return $env->render('@LleAttachment/twig_extension/list_attachment.html.twig',[
