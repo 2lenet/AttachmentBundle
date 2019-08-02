@@ -19,8 +19,8 @@
                             <td>
                                 <nav class="nav nav-list">
                                     <a class="btn btn-info"  target="_blank" href="{{ path('lle_attachment_download',{id:f.id}) }}"><i class="fa fa-download"></i></a>
-                                    <form style="display: inline" method="post" action="{{ path('lle_attachment_delete',{id:f.id}) }}">
-                                        <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                                    <form id="lle_attachment_form_delete_{{ f.id }}" style="display: inline" method="post" action="{{ path('lle_attachment_delete',{id:f.id}) }}">
+                                        <button onclick="confirmDelete({{ f.id }})" type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
                                     </form>
                                 </nav>
                             </td>
@@ -38,6 +38,21 @@
 {%  else %}
     {{ render_attachment(entity, field) }}
 {%  endif %}
+
+
+<script>
+function confirmDelete(id)
+{
+    $('#lle_attachment_confirmWindow').modal({
+        backdrop: 'static',
+        keyboard: false
+    })
+    .on('click', '#lle_attachment_confirmWindow_delete', function(e) {
+        $('#lle_attachment_confirmWindow').modal('hide');
+        $('#lle_attachment_form_delete_'+id).submit();
+    });
+}
+</script>
 
 <div id="lle_attachment_confirmWindow" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">

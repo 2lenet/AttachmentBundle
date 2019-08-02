@@ -827,13 +827,22 @@ var Dropzone = function (_Emitter) {
                 backdrop: 'static',
                 keyboard: false
             })
-            .on('click', '#lle_attachment_confirmWindow_delete', function(e) {
+/*            .on('click', '#lle_attachment_confirmWindow_delete', function(e, file) {
                 $('#lle_attachment_confirmWindow').modal('hide');
                 if (file.previewElement != null && file.previewElement.parentNode != null) {
                     file.previewElement.parentNode.removeChild(file.previewElement);
                 }
                 return this._updateMaxFilesReachedClass();
-            });
+            });*/
+            $('#lle_attachment_confirmWindow_delete').click({file: file, self: this}, removeFile);
+            function removeFile(event)
+            {
+                $('#lle_attachment_confirmWindow').modal('hide');
+                if (event.data.file.previewElement != null && event.data.file.previewElement.parentNode != null) {
+                    event.data.file.previewElement.parentNode.removeChild(event.data.file.previewElement);
+                }
+                return event.data.self._updateMaxFilesReachedClass();
+            }
         },
 
 
