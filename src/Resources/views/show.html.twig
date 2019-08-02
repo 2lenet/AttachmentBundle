@@ -58,7 +58,7 @@ function confirmDelete(id)
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">{{ 'lleattachment.confirmWindow.titleMessage'|trans }}</h5>
+                <h2 style="text-align: center" class="modal-title">{{ 'lleattachment.confirmWindow.titleMessage'|trans }}</h2>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -67,7 +67,7 @@ function confirmDelete(id)
                 <p>{{ 'lleattachment.confirmWindow.bodyMessage'|trans }}</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" id="lle_attachment_confirmWindow_delete">{{ 'lleattachment.confirmWindow.confirm'|trans }}</button>
+                <button type="button" class="btn btn-success" id="lle_attachment_confirmWindow_delete">{{ 'lleattachment.confirmWindow.confirm'|trans }}</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'lleattachment.confirmWindow.close'|trans }}</button>
             </div>
         </div>
