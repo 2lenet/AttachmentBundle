@@ -24,6 +24,7 @@
         let data = JSON.parse(file.xhr.response);
         file.id = data.id;
         file.removeUrl = data.removeUrl;
+        file.downloadUrl = data.downloadUrl;
         if(data.thumb) {
             myDropzone.options.thumbnail.call(myDropzone, file, data.thumb);
         }
@@ -33,6 +34,7 @@
         name: '{{ f.filename }}',
         size: {{ f.size }},
         removeUrl: '{{ path('lle_attachment_delete',{id:f.id}) }}',
+        downloadUrl: '{{ path('lle_attachment_download',{id:f.id}) }}',
         id: {{ f.id }}};
     myDropzone.options.addedfile.call(myDropzone, mockFile);
     myDropzone.options.complete.call(myDropzone, mockFile);

@@ -973,6 +973,8 @@ var Dropzone = function (_Emitter) {
           if (file._removeLink) {
             file._removeLink.innerHTML = this.options.dictRemoveFile;
           }
+          file.downloadLink = Dropzone.createElement("<a target='_blank' class=\"dz-download\" href=\""+file.downloadUrl+"\"> Download </a>");
+          file.previewElement.appendChild(file.downloadLink);
           if (file.previewElement) {
             return file.previewElement.classList.add("dz-complete");
           }
