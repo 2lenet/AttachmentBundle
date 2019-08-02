@@ -470,7 +470,7 @@ var Dropzone = function (_Emitter) {
         /**
          * If `addRemoveLinks` is true, the text to be used to remove a file.
          */
-        dictRemoveFile: "Remove file",
+        dictRemoveFile: "Remove file ?",
 
         /**
          * If this is not null, then the user will be prompted before removing a file.
@@ -823,10 +823,17 @@ var Dropzone = function (_Emitter) {
 
         // Called whenever a file is removed.
         removedfile: function removedfile(file) {
-          if (file.previewElement != null && file.previewElement.parentNode != null) {
-            file.previewElement.parentNode.removeChild(file.previewElement);
-          }
-          return this._updateMaxFilesReachedClass();
+            $('#lle_attachment_confirmWindow').modal({
+                backdrop: 'static',
+                keyboard: false
+            })
+            .on('click', '#lle_attachment_confirmWindow_delete', function(e) {
+                $('#lle_attachment_confirmWindow').modal('hide');
+                if (file.previewElement != null && file.previewElement.parentNode != null) {
+                    file.previewElement.parentNode.removeChild(file.previewElement);
+                }
+                return this._updateMaxFilesReachedClass();
+            });
         },
 
 
