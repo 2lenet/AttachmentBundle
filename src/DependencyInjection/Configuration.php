@@ -22,7 +22,8 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
             ->scalarNode('directory')->defaultValue('data/attachment')->end()
-            ->scalarNode('show_list')->defaultValue(false)->end();
+            ->scalarNode('show_list')->defaultValue(false)->end()
+            ->scalarNode('need_confirm_remove')->defaultValue(true)->end();
 
         return $treeBuilder;
     }

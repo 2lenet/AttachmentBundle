@@ -172,7 +172,9 @@
     transform: scale(1); } }
 .dropzone, .dropzone * {
   box-sizing: border-box; }
-
+.dropzone.dz-clickable .dz-filename a.dz-download span{
+  cursor:pointer;
+}
 .dropzone {
   min-height: 150px;
   border: 2px solid rgba(0, 0, 0, 0.3);

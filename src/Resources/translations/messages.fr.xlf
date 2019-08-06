@@ -13,5 +13,29 @@
         <target>Déposez vos documents ici ou cliquez</target>
       </segment>
     </unit>
+    <unit id="94qpMaP" name="lleattachment.confirmWindow.titleMessage">
+      <segment>
+        <source>lleattachment.confirmWindow.titleMessage</source>
+        <target>Confirmation suppression</target>
+      </segment>
+    </unit>
+    <unit id="94qpMaB" name="lleattachment.confirmWindow.bodyMessage">
+      <segment>
+        <source>lleattachment.confirmWindow.bodyMessage</source>
+        <target>Voulez vous supprimer ce fichier ?</target>
+      </segment>
+    </unit>
+    <unit id="94qpMaT" name="lleattachment.confirmWindow.confirm">
+      <segment>
+        <source>lleattachment.confirmWindow.confirm</source>
+        <target>Confirmer</target>
+      </segment>
+    </unit>
+    <unit id="94qpMaE" name="lleattachment.confirmWindow.close">
+      <segment>
+        <source>lleattachment.confirmWindow.close</source>
+        <target>Fermer</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

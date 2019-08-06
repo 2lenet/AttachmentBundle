@@ -9,10 +9,12 @@
 <form class="dropzone upload-dropzone" id="file_upload-{{unique_id}}" action="{{path('lle_attachment_upload',{'id': item.id, 'class': class,'field': field})}}">
     <div class="dz-default dz-message"><span>{{ 'lleattachment.label.upload'|trans }}</span></div>
 </form>
-
+{%  if config.needConfirmRemove %}
+{%  include '@LleAttachment/popup/_confirm_remove.html.twig' with {'id': 'lle_attachment_confirm-' ~ unique_id } %}
+{% endif %}
 <script>
     var _actionToDropZone = $("#file_upload-{{unique_id}}").attr('action');
-
+    var popupdropzonconfirmremove = {%  if config.needConfirmRemove %}'lle_attachment_confirm-{{unique_id}}'{% else %}false{%  endif %};
     Dropzone.autoDiscover = false;
     var myDropzone = new Dropzone("#file_upload-{{unique_id}}", {timeout:0, url: _actionToDropZone, addRemoveLinks: true, dictRemoveFile: '{{ 'lleattachment.action.remove'|trans }}' });
     myDropzone.on('removedfile', function(event){
@@ -24,6 +26,9 @@
         let data = JSON.parse(file.xhr.response);
         file.id = data.id;
         file.removeUrl = data.removeUrl;
+        file.downloadUrl = data.downloadUrl;
+        file.removeModal = popupdropzonconfirmremove
+        myDropzone.options.complete.call(myDropzone, file);
         if(data.thumb) {
             myDropzone.options.thumbnail.call(myDropzone, file, data.thumb);
         }
@@ -33,6 +38,8 @@
         name: '{{ f.filename }}',
         size: {{ f.size }},
         removeUrl: '{{ path('lle_attachment_delete',{id:f.id}) }}',
+        removeModal: popupdropzonconfirmremove,
+        downloadUrl: '{{ path('lle_attachment_download',{id:f.id}) }}',
         id: {{ f.id }}};
     myDropzone.options.addedfile.call(myDropzone, mockFile);
     myDropzone.options.complete.call(myDropzone, mockFile);

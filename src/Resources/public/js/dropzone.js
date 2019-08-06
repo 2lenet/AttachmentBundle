@@ -470,7 +470,7 @@ var Dropzone = function (_Emitter) {
         /**
          * If `addRemoveLinks` is true, the text to be used to remove a file.
          */
-        dictRemoveFile: "Remove file",
+        dictRemoveFile: "Remove file ?",
 
         /**
          * If this is not null, then the user will be prompted before removing a file.
@@ -823,10 +823,27 @@ var Dropzone = function (_Emitter) {
 
         // Called whenever a file is removed.
         removedfile: function removedfile(file) {
-          if (file.previewElement != null && file.previewElement.parentNode != null) {
-            file.previewElement.parentNode.removeChild(file.previewElement);
-          }
-          return this._updateMaxFilesReachedClass();
+            if(file.removeModal) {
+              $('#' + file.removeModal).modal({
+                backdrop: 'static',
+                keyboard: false
+              })
+
+              $('#' + file.removeModal + '-delete').click({file: file, self: this}, removeFile);
+
+              function removeFile(event) {
+                $('#' + file.removeModal).modal('hide');
+                if (event.data.file.previewElement != null && event.data.file.previewElement.parentNode != null) {
+                  event.data.file.previewElement.parentNode.removeChild(event.data.file.previewElement);
+                }
+                return event.data.self._updateMaxFilesReachedClass();
+              }
+            }else{
+              if (file.previewElement != null && file.previewElement.parentNode != null) {
+                file.previewElement.parentNode.removeChild(file.previewElement);
+              }
+              return this._updateMaxFilesReachedClass();
+            }
         },
 
 
@@ -962,6 +979,10 @@ var Dropzone = function (_Emitter) {
         complete: function complete(file) {
           if (file._removeLink) {
             file._removeLink.innerHTML = this.options.dictRemoveFile;
+          }
+          if(file.downloadUrl) {
+            var link = '<a target="_blank" class="dz-download" href="'+file.downloadUrl+'">'+$(file.previewElement).find('.dz-filename').html()+'</a>'
+            $(file.previewElement).find('.dz-filename').html(link);
           }
           if (file.previewElement) {
             return file.previewElement.classList.add("dz-complete");

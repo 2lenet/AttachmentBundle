@@ -24,6 +24,7 @@ class LleAttachmentExtension extends Extension
 
         $container->setParameter( 'lle.attachment.directory', $config[ 'directory' ] );
         $container->setParameter( 'lle.attachment.show_list', $config[ 'show_list' ] );
+        $container->setParameter( 'lle.attachment.need_confirm_remove', $config['need_confirm_remove']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yaml');

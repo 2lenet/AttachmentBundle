@@ -19,9 +19,15 @@
                             <td>
                                 <nav class="nav nav-list">
                                     <a class="btn btn-info"  target="_blank" href="{{ path('lle_attachment_download',{id:f.id}) }}"><i class="fa fa-download"></i></a>
-                                    <form style="display: inline" method="post" action="{{ path('lle_attachment_delete',{id:f.id}) }}">
-                                        <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
-                                    </form>
+                                    {%  if config.needConfirmRemove %}
+                                        <form id="lle_attachment_form_delete_{{ f.id }}" style="display: inline" method="post" action="{{ path('lle_attachment_delete',{id:f.id}) }}">
+                                            <button onclick="confirmDelete({{ f.id }})" type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                                        </form>
+                                    {%  else %}
+                                        <form style="display: inline" method="post" action="{{ path('lle_attachment_delete',{id:f.id}) }}">
+                                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                                        </form>
+                                    {%  endif %}
                                 </nav>
                             </td>
                         </tr>
@@ -38,3 +44,20 @@
 {%  else %}
     {{ render_attachment(entity, field) }}
 {%  endif %}
+
+{%  if config.needConfirmRemove %}
+<script>
+function confirmDelete(id)
+{
+    $('#lle_attachment_confirm-0').modal({
+        backdrop: 'static',
+        keyboard: false
+    })
+    .on('click', '#lle_attachment_confirm-0-delete', function(e) {
+        $('#lle_attachment_confirmWindow').modal('hide');
+        $('#lle_attachment_form_delete_'+id).submit();
+    });
+}
+</script>
+{%  include '@LleAttachment/popup/_confirm_remove.html.twig' with {'id': 'lle_attachment_confirm-0' } %}
+{% endif %}
