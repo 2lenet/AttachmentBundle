@@ -52,8 +52,8 @@ class AttachmentManager{
         }
     }
 
-    public function hasList(){
-        return $this->parameters->get('lle.attachment.show_list');
+    public function hasList():bool {
+        return (bool) $this->parameters->get('lle.attachment.show_list');
     }
 
     public function deleteById(int $id): void{
@@ -134,7 +134,12 @@ class AttachmentManager{
     }
 
     public function getUniqueId(object $entity, $field): string{
-        return str_replace('\\','-',get_class($entity)).$this->getIdentifierValue($entity).'-'.$field;
+        if($field){
+            return str_replace('\\','-',get_class($entity)).$this->getIdentifierValue($entity).'-'.$field;
+        }else{
+            return str_replace('\\','-',get_class($entity)).$this->getIdentifierValue($entity);
+        }
+
     }
 
     public function getIconByMimeType($mimetype){
@@ -152,6 +157,10 @@ class AttachmentManager{
         return $this->router->generate('lle_attachment_delete', ['id' => $attachment->getId()]);
     }
 
+    public function generateDownloadUrl(Attachment $attachment){
+        return $this->router->generate('lle_attachment_download', ['id' => $attachment->getId()]);
+    }
+
     public function isImage(Attachment $attachment):bool{
         return (bool)strstr($attachment->getMimetype(), 'image');
     }
@@ -165,6 +174,12 @@ class AttachmentManager{
     private function getClass(object $entity){
         $meta = $this->em->getClassMetadata(get_class($entity));
         return $meta->getReflectionClass()->getName();
+    }
+
+    public function getConfig(): array{
+        return [
+            'needConfirmRemove' => (bool) $this->parameters->get('lle.attachment.need_confirm_remove')
+        ];
     }
 
 

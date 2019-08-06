@@ -27,7 +27,8 @@ final class UploadAction{
                 'success' => true,
                 'id' => $attachment->getId(),
                 'thumb'=> ($this->manager->isImage($attachment))? null:$this->manager->getPublicIcon($attachment),
-                'removeUrl' => $this->manager->generateRemoveUrl($attachment)
+                'removeUrl' => $this->manager->generateRemoveUrl($attachment),
+                'downloadUrl' => $this->manager->generateDownloadUrl($attachment)
             ]);
         }else{
             return new JsonResponse(['success' => false]);

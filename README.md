@@ -61,10 +61,11 @@ with default value
 framework:
     translator:
         fallbacks: ['fr']
-
+  
 lle_attachment:
     directory: data/attachment #directory of files is registred
     show_list: false #show or not show the list of files (table) with uploader widget
+    need_confirm_remove: true #modal for confirm delete or no
 ```
 
 Thanks to use

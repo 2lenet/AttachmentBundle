@@ -32,7 +32,8 @@ class AttachmentTwigExtension extends \Twig_Extension
             'item' => $item,
             'field' => $field,
             'class' => get_class($item),
-            'unique_id' => $this->manager->getUniqueId($item, $field)
+            'unique_id' => $this->manager->getUniqueId($item, $field),
+            'config' => $this->manager->getConfig()
         ]);
     }
     public function getAttachments(\Twig_Environment $env, object $item, $field=null)

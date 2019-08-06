@@ -24,9 +24,11 @@ final class ShowAction{
             $field = $options['field'];
         }
         return new Response($this->twig->render('@LleAttachment/show.html.twig',
+
             [
                 'docs' => $this->manager->findAll($item, $field),
                 'list' => $this->manager->hasList(),
+                'config' => $this->manager->getConfig(),
                 'entity' => $item,
                 'field' => $field
             ]

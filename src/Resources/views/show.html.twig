@@ -19,9 +19,15 @@
                             <td>
                                 <nav class="nav nav-list">
                                     <a class="btn btn-info"  target="_blank" href="{{ path('lle_attachment_download',{id:f.id}) }}"><i class="fa fa-download"></i></a>
-                                    <form id="lle_attachment_form_delete_{{ f.id }}" style="display: inline" method="post" action="{{ path('lle_attachment_delete',{id:f.id}) }}">
-                                        <button onclick="confirmDelete({{ f.id }})" type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
-                                    </form>
+                                    {%  if config.needConfirmRemove %}
+                                        <form id="lle_attachment_form_delete_{{ f.id }}" style="display: inline" method="post" action="{{ path('lle_attachment_delete',{id:f.id}) }}">
+                                            <button onclick="confirmDelete({{ f.id }})" type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                                        </form>
+                                    {%  else %}
+                                        <form style="display: inline" method="post" action="{{ path('lle_attachment_delete',{id:f.id}) }}">
+                                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                                        </form>
+                                    {%  endif %}
                                 </nav>
                             </td>
                         </tr>
@@ -39,37 +45,19 @@
     {{ render_attachment(entity, field) }}
 {%  endif %}
 
-
+{%  if config.needConfirmRemove %}
 <script>
 function confirmDelete(id)
 {
-    $('#lle_attachment_confirmWindow').modal({
+    $('#lle_attachment_confirm-0').modal({
         backdrop: 'static',
         keyboard: false
     })
-    .on('click', '#lle_attachment_confirmWindow_delete', function(e) {
+    .on('click', '#lle_attachment_confirm-0-delete', function(e) {
         $('#lle_attachment_confirmWindow').modal('hide');
         $('#lle_attachment_form_delete_'+id).submit();
     });
 }
 </script>
-
-<div id="lle_attachment_confirmWindow" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 style="text-align: center" class="modal-title">{{ 'lleattachment.confirmWindow.titleMessage'|trans }}</h2>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>{{ 'lleattachment.confirmWindow.bodyMessage'|trans }}</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" id="lle_attachment_confirmWindow_delete">{{ 'lleattachment.confirmWindow.confirm'|trans }}</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'lleattachment.confirmWindow.close'|trans }}</button>
-            </div>
-        </div>
-    </div>
-</div>
+{%  include '@LleAttachment/popup/_confirm_remove.html.twig' with {'id': 'lle_attachment_confirm-0' } %}
+{% endif %}
