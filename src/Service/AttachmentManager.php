@@ -5,6 +5,7 @@ namespace Lle\AttachmentBundle\Service;
 use Doctrine\ORM\EntityRepository;
 use Lle\AttachmentBundle\Entity\Attachment;
 use Doctrine\ORM\EntityManagerInterface;
+use Lle\AttachmentBundle\UploadedFileAttachmentInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File;
@@ -63,7 +64,7 @@ class AttachmentManager{
         unlink($this->kernel->getRootDir().'/../'.$file->getPath());
     }
 
-    public function addFile(UploadedFile $media, $class, $id, $field): ?Attachment{
+    public function addFile(UploadedFile $media, $class, $id, $field = null): ?Attachment{
 
         if ($media->isValid()) {
             $file = new Attachment();
@@ -79,8 +80,19 @@ class AttachmentManager{
         }
         return null;
     }
+    
+    public function addFileByEntity(UploadedFileAttachmentInterface $entity){
+        if($entity->getUploadedFileAttachment()) {
+            $this->addFile($entity->getUploadedFileAttachment(), $this->getClass($entity), $this->getIdentifierValue($entity), $entity->getUploadedFilesAttachmentField());
+        }
+        if(is_iterable($entity->getUploadedFilesAttachment())){
+            foreach($entity->getUploadedFilesAttachment() as $attachment){
+                $this->addFile($attachment, $this->getClass($entity), $this->getIdentifierValue($entity), $entity->getUploadedFilesAttachmentField());
+            }
+        }
+    }
 
-    public function addFileObject(File $media, $class, $id, $field=null): ?Attachment{
+    public function addFileObject(File $media, $class, $id, $field = null): ?Attachment{
 
         $file = new Attachment();
         $file->setObjectId($id);
