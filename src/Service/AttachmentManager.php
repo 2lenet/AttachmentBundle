@@ -60,7 +60,7 @@ class AttachmentManager{
         $file = $this->find($id);
         $this->em->remove($file);
         $this->em->flush();
-        unlink($this->kernel->getRootDir().'/../'.$file->getPath());
+        unlink($this->kernel->getProjectDir().'/'.$file->getPath());
     }
 
     public function addFile(UploadedFile $media, $class, $id, $field): ?Attachment{
@@ -96,7 +96,7 @@ class AttachmentManager{
 
     private function moveAndSave(Attachment $file, $media, $id) {
 
-        $uploadDir = $this->kernel->getRootDir().'/../'.$this->getUploadDir($file);
+        $uploadDir = $this->kernel->getProjectDir().'/'.$this->getUploadDir($file);
 
         if (!file_exists($uploadDir)) {
             mkdir($uploadDir, 0775, true);
@@ -113,7 +113,7 @@ class AttachmentManager{
     }
 
     public function getAbsolutePath($file) {
-        return $this->kernel->getRootDir() . '/../' . $file->getPath();
+        return $this->kernel->getProjectDir() . '/' . $file->getPath();
     }
 
     public function getRepository(): EntityRepository {
