@@ -15,7 +15,11 @@ lle_attachment:
 ## Embed controller in a template
 
 ```twig
-{{ render(controller('lle.attachment', {'item': item)) }}
+{{ render(controller('lle.attachment', {'item': item})) }}
+```
+Or with field if you want only an group of attachment
+```twig
+{{ render(controller('lle.attachment', {'item': item, options: {'field': 'pdf'}})) }}
 ```
 
 Like that you can use "lle.attachment" action with EasyAdminPlusBundle:
@@ -25,6 +29,15 @@ show:
     title: title.examen.show
     fields:
         - { type: 'tab', id: 'documents', label: 'tab.documents', action: 'lle.attachment'}
+```
+
+Or with field if you want only an group of attachment
+ 
+```yaml
+show:
+    title: title.examen.show
+    fields:
+        - { type: 'tab', id: 'documents', label: 'tab.documents', action: 'lle.attachment', options: {'field': 'pdf'}}
 ```
 
 Information: the lle.attachment is a alias of lle.attachment.show.action
@@ -126,3 +139,76 @@ class RapportSubscriber implements EventSubscriberInterface
 }
 
 ```
+
+## add uploaded file in form
+
+- Add UploadedFileAttachmentInterface with UploadedFileAttachmentTrait at your entity
+```php
+use Lle\AttachmentBundle\UploadedFileAttachmentInterface;
+use Lle\AttachmentBundle\UploadedFileAttachmentTrait;
+```
+
+- In your entity form add 
+```php
+$builder->add('uploadedFilesAttachment', FileType::class, ['multiple'=> true]);
+// or (and) $builder->add('uploadedFileAttachment', FileType::class, ['multiple'=> false]);
+$builder->add('uploadedFilesAttachmentField'); //optional (default is null)
+```
+
+- Now you have to call addFileByEntity after persist (entity identification have to be create)
+
+```php
+$this->attachmentManager->addFileByEntity($entity);
+```
+
+- here an simple exemple with EasyAdmin:
+
+```php
+
+<?php
+
+namespace App\EventListener;
+
+
+use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Event\EasyAdminEvents;
+use Lle\AttachmentBundle\Service\AttachmentManager;
+use Lle\AttachmentBundle\UploadedFileAttachmentInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\EventDispatcher\GenericEvent;
+
+class AttachmentSubscriber implements EventSubscriberInterface
+{
+
+    private $attachmentManager;
+
+    public function __construct(AttachmentManager $attachmentManager){
+        $this->attachmentManager = $attachmentManager;
+    }
+
+    public function addFile(GenericEvent $event){
+        if($event->getSubject() instanceof UploadedFileAttachmentInterface){
+            $this->attachmentManager->addFileByEntity($event->getSubject());
+        }
+    }
+
+
+    public static function getSubscribedEvents()
+    {
+        return [
+            EasyAdminEvents::POST_PERSIST => 'addFile',
+            EasyAdminEvents::POST_UPDATE => 'addFile'
+        ];
+    }
+}
+
+```
+
+- if you want you can defin the default filed in entity
+```php
+public function getUploadedFilesAtachmentField(): ?string{
+    return 'uploaded';
+}
+```
+
+- For validation use Symfony validator annotations or validator in form  (Advice: if you use validator annotation create your own Trait)
