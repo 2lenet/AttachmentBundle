@@ -13,10 +13,31 @@
 {%  include '@LleAttachment/popup/_confirm_remove.html.twig' with {'id': 'lle_attachment_confirm-' ~ unique_id } %}
 {% endif %}
 <script>
+
     var _actionToDropZone = $("#file_upload-{{unique_id}}").attr('action');
-    var popupdropzonconfirmremove = {%  if config.needConfirmRemove %}'lle_attachment_confirm-{{unique_id}}'{% else %}false{%  endif %};
+    {%  if config.needConfirmRemove %}
+    var removeCallBack = null;
+    var popupdropzonconfirmremove = 'lle_attachment_confirm-{{unique_id}}';
+    $("#" + popupdropzonconfirmremove + "-delete").click(function() {
+        if (removeCallback) {
+            removeCallback();
+        }
+        $("#" + popupdropzonconfirmremove).modal('hide');
+    });
+    Dropzone.confirm = function(question, fnAccepted, fnRejected) {
+        // retain the callback to invoke to accept the removal
+        removeCallback = fnAccepted;
+        // launch your fancy bootstrap modal
+        $("#" + popupdropzonconfirmremove).modal('show');
+    };
+    {%  endif %}
     Dropzone.autoDiscover = false;
-    var myDropzone = new Dropzone("#file_upload-{{unique_id}}", {timeout:0, url: _actionToDropZone, addRemoveLinks: true, dictRemoveFile: '{{ 'lleattachment.action.remove'|trans }}' });
+    var myDropzone = new Dropzone("#file_upload-{{unique_id}}", {
+        timeout:0,
+        url: _actionToDropZone,
+        addRemoveLinks: true,
+        dictRemoveFileConfirmation: {%  if config.needConfirmRemove %}true{% else %}false{% endif %},
+        dictRemoveFile: '{{ 'lleattachment.action.remove'|trans }}' });
     myDropzone.on('removedfile', function(event){
         $.ajax(event.removeUrl, {'method':'POST'});
         $('#attach-file-' + event.id).hide();
@@ -27,7 +48,6 @@
         file.id = data.id;
         file.removeUrl = data.removeUrl;
         file.downloadUrl = data.downloadUrl;
-        file.removeModal = popupdropzonconfirmremove
         myDropzone.options.complete.call(myDropzone, file);
         if(data.thumb) {
             myDropzone.options.thumbnail.call(myDropzone, file, data.thumb);
@@ -38,7 +58,6 @@
         name: '{{ f.filename }}',
         size: {{ f.size }},
         removeUrl: '{{ path('lle_attachment_delete',{id:f.id}) }}',
-        removeModal: popupdropzonconfirmremove,
         downloadUrl: '{{ path('lle_attachment_download',{id:f.id}) }}',
         id: {{ f.id }}};
     myDropzone.options.addedfile.call(myDropzone, mockFile);
