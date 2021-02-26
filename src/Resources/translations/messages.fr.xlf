@@ -37,5 +37,17 @@
         <target>Fermer</target>
       </segment>
     </unit>
+    <unit id="94qpMaA" name="lleattachment.field.createdBy.empty">
+      <segment>
+        <source>lleattachment.field.createdBy.empty</source>
+        <target>Auteur inconnu</target>
+      </segment>
+    </unit>
+    <unit id="94qpMaB" name="lleattachment.field.createdAt.empty">
+      <segment>
+        <source>lleattachment.field.createdAt.empty</source>
+        <target>Date de création inconnue</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

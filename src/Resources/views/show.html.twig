@@ -12,8 +12,16 @@
                             </td>
                             <td style="vertical-align: middle;">
                                 <div>
-                                    <span>{{ 'history.action.create'|trans({}, 'EasyAdminPlusBundle') }} {{ f.createdBy }}</span>
-                                    <br><span>{{ 'blame.created_at'|trans({}, 'EasyAdminPlusBundle') }} {{ f.createdAt|date('d/m/Y') }}</span>
+                                    {% if f.createdBy %}
+                                        <span>{{ 'history.action.create'|trans({}, 'EasyAdminPlusBundle') }} {{ f.createdBy }}</span>
+                                    {% else %}
+                                        <span>{{ "lleattachment.field.createdBy.empty" | trans }}</span>
+                                    {% endif %}
+                                    {% if f.createdAt %}
+                                        <br><span>{{ 'blame.created_at'|trans({}, 'EasyAdminPlusBundle') }} {{ f.createdAt|date('d/m/Y') }}</span>
+                                    {% else %}
+                                        <br><span>{{ "lleattachment.field.createdAt.empty" | trans }}</span>
+                                    {% endif %}
                                 </div>
                             </td>
                             <td>
