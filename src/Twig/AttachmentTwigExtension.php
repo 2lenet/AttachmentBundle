@@ -5,8 +5,11 @@ namespace Lle\AttachmentBundle\Twig;
 
 use Idk\LegoBundle\Service\Tag\WidgetChain;
 use Lle\AttachmentBundle\Service\AttachmentManager;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
+use Twig\Environment;
 
-class AttachmentTwigExtension extends \Twig_Extension
+class AttachmentTwigExtension extends AbstractExtension
 {
 
     private $manager;
@@ -19,13 +22,13 @@ class AttachmentTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('render_attachment', array($this, 'renderAttachment'), array('is_safe' => array('html'), 'needs_environment' => true)),
-            new \Twig_SimpleFunction('list_attachment', array($this, 'listAttachment'), array('is_safe' => array('html'), 'needs_environment' => true)),
-            new \Twig_SimpleFunction('get_attachments', array($this, 'getAttachments'), array('is_safe' => array('html'), 'needs_environment' => true))
+            new TwigFunction('render_attachment', array($this, 'renderAttachment'), array('is_safe' => array('html'), 'needs_environment' => true)),
+            new TwigFunction('list_attachment', array($this, 'listAttachment'), array('is_safe' => array('html'), 'needs_environment' => true)),
+            new TwigFunction('get_attachments', array($this, 'getAttachments'), array('is_safe' => array('html'), 'needs_environment' => true))
         );
     }
 
-    public function renderAttachment(\Twig_Environment $env, object $item, $field=null)
+    public function renderAttachment(Environment $env, object $item, $field=null)
     {
         return $env->render('@LleAttachment/twig_extension/render_attachment.html.twig',[
             'docs' => $this->manager->findAll($item, $field),
@@ -36,11 +39,11 @@ class AttachmentTwigExtension extends \Twig_Extension
             'config' => $this->manager->getConfig()
         ]);
     }
-    public function getAttachments(\Twig_Environment $env, object $item, $field=null)
+    public function getAttachments(Environment $env, object $item, $field=null)
     {
         return $this->manager->findAll($item, $field);
     }
-    public function listAttachment(\Twig_Environment $env, object $item, $field=null)
+    public function listAttachment(Environment $env, object $item, $field=null)
     {
         return $env->render('@LleAttachment/twig_extension/list_attachment.html.twig',[
             'docs' => $this->manager->findAll($item, $field)
